@@ -62,6 +62,8 @@ function load_mailbox(mailbox) {
     // Show the mailbox and hide other views
     document.querySelector('#emails-view').style.display = 'block';
     document.querySelector('#compose-view').style.display = 'none';
+    //added this to hide email body
+    document.querySelector('#emailb').style.display = 'none'
 
     // Show the mailbox name
     document.querySelector('#emails-view').innerHTML = `<h3>${mailbox.charAt(0).toUpperCase() + mailbox.slice(1)}</h3>`;
@@ -99,8 +101,44 @@ function load_mailbox(mailbox) {
                         .then(email => {
                             // Print email
                             console.log(email);
+                            document.querySelector('#emails-view').style.display = 'none';
+                            document.querySelector('#compose-view').style.display = 'none';
+                            document.querySelector('#emailb').style.display = 'block';
+
+                            const emailb = document.querySelector('#emailb');
+                            //this loop to clear the old emails viewed
+                            while (emailb.firstChild) {
+                                emailb.removeChild(emailb.firstChild);
+                            }
+
+
+                            const fromtage = document.createElement('p');
+                            const totage = document.createElement('p');
+                            const subjectage = document.createElement('p');
+                            const timetage = document.createElement('p');
+                            const replybutton = document.createElement('button');
+                            const justanhr = document.createElement('hr');
+                            const emailbody = document.createElement('p');
+                            fromtage.innerHTML = `<b>From:</b> ${email.sender}`;
+                            totage.innerHTML = `<strong>To:</strong> ${email.recipients}`;
+                            subjectage.innerHTML = `<strong>Subject:</strong> ${email.subject}`;
+                            timetage.innerHTML = `<strong>Timestamp:</strong> ${email.timestamp}`;
+                            replybutton.innerHTML = `Reply`;
+                            replybutton.id = 'replyid'
+                            emailbody.innerText = email.body
+                            emailb.append(fromtage)
+                            emailb.append(totage)
+                            emailb.append(subjectage)
+                            emailb.append(timetage)
+                            emailb.append(replybutton)
+                            emailb.append(justanhr)
+                            emailb.append(emailbody)
+
+
+
 
                             // ... do something else with email ...
+
                         });
 
 
