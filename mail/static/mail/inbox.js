@@ -162,6 +162,7 @@ function load_mailbox(mailbox) {
                                     archiveb.innerHTML = 'Archive';
                                     archiveb.id = 'archive';
 
+
                                     emailb.append(archiveb);
 
 
@@ -179,6 +180,7 @@ function load_mailbox(mailbox) {
 
                                 const archive = document.getElementById('archive')
                                 if (archive != null) {
+                                    archive.disabled = false;
 
                                     archive.addEventListener('click', () => {
                                         fetch(`/emails/${emailclick.dataset.eId}`, {
@@ -194,7 +196,7 @@ function load_mailbox(mailbox) {
                                 }
                                 const unarchive = document.getElementById('unarchive')
                                 if (unarchive != null) {
-
+                                    unarchive.disabled = false;
                                     unarchive.onclick = () => {
                                         fetch(`/emails/${emailclick.dataset.eId}`, {
                                             method: 'PUT',
@@ -203,6 +205,7 @@ function load_mailbox(mailbox) {
                                             })
                                         })
                                         unarchive.disabled = true;
+
                                     }
 
                                 }

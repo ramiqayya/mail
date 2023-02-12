@@ -26,7 +26,7 @@ textarea {
 
 }
 
-#archive,
+#archive:hover,
 #unarchive:hover {
 
     background-color: #283618;
@@ -34,7 +34,7 @@ textarea {
 
 }
 
-#archive,
+#archive:disabled,
 #unarchive:disabled {
 
     background-color: grey;
