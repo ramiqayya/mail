@@ -80,10 +80,10 @@ function load_mailbox(mailbox) {
 
             for (email of emails) {
                 console.log(email)
-                const em = document.createElement('div')
-                const senderdiv = document.createElement('div')
-                const subjdiv = document.createElement('div')
-                const timediv = document.createElement('div')
+                const em = document.createElement('div') //email tag container div
+                const senderdiv = document.createElement('div')//sender test div
+                const subjdiv = document.createElement('div')//subject div
+                const timediv = document.createElement('div')//timestamp div
                 em.classList.add("email-tag");
                 em.dataset.eId = email.id
                 senderdiv.id = "sender"
@@ -97,20 +97,32 @@ function load_mailbox(mailbox) {
                 em.append(timediv)
                 body = document.querySelector('#emails-view')
                 body.append(em)
-                // document.querySelectorAll('.email-tag').forEach(function (n_email) {
-                //     n_email.onclick = function () {
-                let emailId = email.id
-                console.log(email.id)
+
+                if (email.read === true) {
+                    em.style.backgroundColor = '#e5e5e5'
+                }
+
+
+
 
                 document.querySelectorAll(".email-tag").forEach(function (emailclick) {
                     emailclick.onclick = function () {
                         fetch(`/emails/${emailclick.dataset.eId}`)
                             .then(response => response.json())
                             .then(emaildetails => {
-                                // Print email
 
-                                console.log(`jish ej email ${email.body} ya sada`)
-                                console.log(`jish ej emaildetails ${emaildetails.body} ya sada`)
+                                // console.log(emailclick)
+                                // mark email as read
+                                fetch(`/emails/${emailclick.dataset.eId}`, {
+                                    method: 'PUT',
+                                    body: JSON.stringify({
+                                        read: true
+                                    })
+                                })
+                                console.log(mailbox)
+                                console.log(emaildetails.archived)
+
+
 
                                 document.querySelector('#emails-view').style.display = 'none';
                                 document.querySelector('#compose-view').style.display = 'none';
@@ -144,6 +156,56 @@ function load_mailbox(mailbox) {
                                 emailb.append(replybutton)
                                 emailb.append(justanhr)
                                 emailb.append(emailbody)
+
+                                if (mailbox === 'inbox' && emaildetails.archived === false) {
+                                    const archiveb = document.createElement('button');
+                                    archiveb.innerHTML = 'Archive';
+                                    archiveb.id = 'archive';
+
+                                    emailb.append(archiveb);
+
+
+
+                                } else if (mailbox === 'archive' && emaildetails.archived == true) {
+
+                                    const unarchiveb = document.createElement('button');
+                                    unarchiveb.id = 'unarchive';
+                                    unarchiveb.innerHTML = 'Unarchive';
+
+                                    emailb.append(unarchiveb);
+
+
+                                }
+
+                                const archive = document.getElementById('archive')
+                                if (archive != null) {
+
+                                    archive.addEventListener('click', () => {
+                                        fetch(`/emails/${emailclick.dataset.eId}`, {
+                                            method: 'PUT',
+                                            body: JSON.stringify({
+                                                archived: true
+                                            })
+                                        })
+                                        archive.disabled = true;
+
+                                    })
+
+                                }
+                                const unarchive = document.getElementById('unarchive')
+                                if (unarchive != null) {
+
+                                    unarchive.onclick = () => {
+                                        fetch(`/emails/${emailclick.dataset.eId}`, {
+                                            method: 'PUT',
+                                            body: JSON.stringify({
+                                                archived: false
+                                            })
+                                        })
+                                        unarchive.disabled = true;
+                                    }
+
+                                }
 
 
 
