@@ -74,16 +74,18 @@ function load_mailbox(mailbox) {
         .then(response => response.json())
         .then(emails => {
             // Print emails
-            console.log(emails);
+
 
             // ... do something else with emails ...
 
             for (email of emails) {
+                console.log(email)
                 const em = document.createElement('div')
                 const senderdiv = document.createElement('div')
                 const subjdiv = document.createElement('div')
                 const timediv = document.createElement('div')
-                em.id = "email-tag"
+                em.classList.add("email-tag");
+                em.dataset.eId = email.id
                 senderdiv.id = "sender"
                 subjdiv.id = "subject"
                 timediv.id = "time"
@@ -95,58 +97,70 @@ function load_mailbox(mailbox) {
                 em.append(timediv)
                 body = document.querySelector('#emails-view')
                 body.append(em)
-                em.onclick = () => {
-                    fetch(`/emails/${email.id}`)
-                        .then(response => response.json())
-                        .then(email => {
-                            // Print email
-                            console.log(email);
-                            document.querySelector('#emails-view').style.display = 'none';
-                            document.querySelector('#compose-view').style.display = 'none';
-                            document.querySelector('#emailb').style.display = 'block';
+                // document.querySelectorAll('.email-tag').forEach(function (n_email) {
+                //     n_email.onclick = function () {
+                let emailId = email.id
+                console.log(email.id)
 
-                            const emailb = document.querySelector('#emailb');
-                            //this loop to clear the old emails viewed
-                            while (emailb.firstChild) {
-                                emailb.removeChild(emailb.firstChild);
-                            }
+                document.querySelectorAll(".email-tag").forEach(function (emailclick) {
+                    emailclick.onclick = function () {
+                        fetch(`/emails/${emailclick.dataset.eId}`)
+                            .then(response => response.json())
+                            .then(emaildetails => {
+                                // Print email
 
+                                console.log(`jish ej email ${email.body} ya sada`)
+                                console.log(`jish ej emaildetails ${emaildetails.body} ya sada`)
 
-                            const fromtage = document.createElement('p');
-                            const totage = document.createElement('p');
-                            const subjectage = document.createElement('p');
-                            const timetage = document.createElement('p');
-                            const replybutton = document.createElement('button');
-                            const justanhr = document.createElement('hr');
-                            const emailbody = document.createElement('p');
-                            fromtage.innerHTML = `<b>From:</b> ${email.sender}`;
-                            totage.innerHTML = `<strong>To:</strong> ${email.recipients}`;
-                            subjectage.innerHTML = `<strong>Subject:</strong> ${email.subject}`;
-                            timetage.innerHTML = `<strong>Timestamp:</strong> ${email.timestamp}`;
-                            replybutton.innerHTML = `Reply`;
-                            replybutton.id = 'replyid'
-                            emailbody.innerText = email.body
-                            emailb.append(fromtage)
-                            emailb.append(totage)
-                            emailb.append(subjectage)
-                            emailb.append(timetage)
-                            emailb.append(replybutton)
-                            emailb.append(justanhr)
-                            emailb.append(emailbody)
+                                document.querySelector('#emails-view').style.display = 'none';
+                                document.querySelector('#compose-view').style.display = 'none';
+                                document.querySelector('#emailb').style.display = 'block';
+
+                                const emailb = document.querySelector('#emailb');
+                                //this loop to clear the old emails viewed
+                                while (emailb.firstChild) {
+                                    emailb.removeChild(emailb.firstChild);
+                                }
 
 
+                                const fromtage = document.createElement('p');
+                                const totage = document.createElement('p');
+                                const subjectage = document.createElement('p');
+                                const timetage = document.createElement('p');
+                                const replybutton = document.createElement('button');
+                                const justanhr = document.createElement('hr');
+                                const emailbody = document.createElement('p');
+                                fromtage.innerHTML = `<b>From:</b> ${emaildetails.sender}`;
+                                totage.innerHTML = `<strong>To:</strong> ${emaildetails.recipients}`;
+                                subjectage.innerHTML = `<strong>Subject:</strong> ${emaildetails.subject}`;
+                                timetage.innerHTML = `<strong>Timestamp:</strong> ${emaildetails.timestamp}`;
+                                replybutton.innerHTML = `Reply`;
+                                replybutton.id = 'replyid'
+                                emailbody.innerText = emaildetails.body
+                                emailb.append(fromtage)
+                                emailb.append(totage)
+                                emailb.append(subjectage)
+                                emailb.append(timetage)
+                                emailb.append(replybutton)
+                                emailb.append(justanhr)
+                                emailb.append(emailbody)
 
 
-                            // ... do something else with email ...
-
-                        });
 
 
+                                // ... do something else with email ...
 
-                }
+                            });
+
+                    }
+                })
 
             }
-        });
+        })
+    // }
+    // )
+
+
 
 
 

@@ -2,7 +2,7 @@ textarea {
     min-height: 400px;
 }
 
-#email-tag {
+.email-tag {
     border: 2px solid black;
     display: flex;
     padding-top: 3px;
@@ -12,7 +12,7 @@ textarea {
 
 }
 
-#email-tag:hover {
+.email-tag:hover {
 
     cursor: pointer;
     background-color: #283618;
