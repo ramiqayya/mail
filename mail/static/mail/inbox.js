@@ -180,7 +180,7 @@ function load_mailbox(mailbox) {
 
                                 const archive = document.getElementById('archive')
                                 if (archive != null) {
-                                    archive.disabled = false;
+                                    // archive.disabled = false;
 
                                     archive.addEventListener('click', () => {
                                         fetch(`/emails/${emailclick.dataset.eId}`, {
@@ -188,25 +188,32 @@ function load_mailbox(mailbox) {
                                             body: JSON.stringify({
                                                 archived: true
                                             })
-                                        })
-                                        archive.disabled = true;
+                                        }).then(load_mailbox('inbox'))
 
+                                        // archive.disabled = true;
+                                        location.reload();
                                     })
+
+
 
                                 }
                                 const unarchive = document.getElementById('unarchive')
                                 if (unarchive != null) {
-                                    unarchive.disabled = false;
+                                    // unarchive.disabled = false;
                                     unarchive.onclick = () => {
                                         fetch(`/emails/${emailclick.dataset.eId}`, {
                                             method: 'PUT',
                                             body: JSON.stringify({
                                                 archived: false
                                             })
-                                        })
-                                        unarchive.disabled = true;
+                                        }).then(load_mailbox('inbox'))
+                                        location.reload()
+                                        // unarchive.disabled = true;
+
 
                                     }
+
+
 
                                 }
 
