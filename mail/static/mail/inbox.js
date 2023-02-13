@@ -30,6 +30,7 @@ document.addEventListener('DOMContentLoaded', function () {
             });
 
         load_mailbox('sent')
+        load_mailbox('sent')
 
     }
 
@@ -44,13 +45,13 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 function compose_email() {
-    // let's try this one 
 
 
 
     // Show compose view and hide other views
     document.querySelector('#emails-view').style.display = 'none';
     document.querySelector('#compose-view').style.display = 'block';
+    document.querySelector('#emailb').style.display = 'none'
 
     // Clear out composition fields
     document.querySelector('#compose-recipients').value = '';
@@ -85,21 +86,21 @@ function load_mailbox(mailbox) {
                 const subjdiv = document.createElement('div')//subject div
                 const timediv = document.createElement('div')//timestamp div
                 em.classList.add("email-tag");
-                em.dataset.eId = email.id
-                senderdiv.id = "sender"
-                subjdiv.id = "subject"
-                timediv.id = "time"
-                senderdiv.innerHTML = email.sender
-                subjdiv.innerHTML = email.subject
-                timediv.innerHTML = email.timestamp
-                em.append(senderdiv)
-                em.append(subjdiv)
-                em.append(timediv)
-                body = document.querySelector('#emails-view')
-                body.append(em)
+                em.dataset.eId = email.id;
+                senderdiv.id = "sender";
+                subjdiv.id = "subject";
+                timediv.id = "time";
+                senderdiv.innerHTML = email.sender;
+                subjdiv.innerHTML = email.subject;
+                timediv.innerHTML = email.timestamp;
+                em.append(senderdiv);
+                em.append(subjdiv);
+                em.append(timediv);
+                body = document.querySelector('#emails-view');
+                body.append(em);
 
                 if (email.read === true) {
-                    em.style.backgroundColor = '#e5e5e5'
+                    em.style.backgroundColor = '#e5e5e5';
                 }
 
 
@@ -139,21 +140,53 @@ function load_mailbox(mailbox) {
                                 const totage = document.createElement('p');
                                 const subjectage = document.createElement('p');
                                 const timetage = document.createElement('p');
-                                const replybutton = document.createElement('button');
+
                                 const justanhr = document.createElement('hr');
                                 const emailbody = document.createElement('p');
                                 fromtage.innerHTML = `<b>From:</b> ${emaildetails.sender}`;
                                 totage.innerHTML = `<strong>To:</strong> ${emaildetails.recipients}`;
                                 subjectage.innerHTML = `<strong>Subject:</strong> ${emaildetails.subject}`;
                                 timetage.innerHTML = `<strong>Timestamp:</strong> ${emaildetails.timestamp}`;
-                                replybutton.innerHTML = `Reply`;
-                                replybutton.id = 'replyid'
+
                                 emailbody.innerText = emaildetails.body
                                 emailb.append(fromtage)
                                 emailb.append(totage)
                                 emailb.append(subjectage)
                                 emailb.append(timetage)
-                                emailb.append(replybutton)
+                                if (mailbox === 'inbox') {
+                                    const replybutton = document.createElement('button');
+                                    replybutton.innerHTML = `Reply`;
+                                    replybutton.id = 'replyid';
+                                    emailb.append(replybutton)
+                                }
+                                const replyb = document.getElementById('replyid')
+                                if (replyb != null) {
+                                    replyb.dataset.emailId = emaildetails.id;
+                                    replyb.onclick = function () {
+                                        fetch(`/emails/${replyb.dataset.emailId}`)
+                                            .then(response => response.json())
+                                            .then(sentE => {
+
+                                                document.querySelector('#emails-view').style.display = 'none';
+                                                document.querySelector('#compose-view').style.display = 'block';
+                                                document.querySelector('#emailb').style.display = 'none'
+
+                                                // Clear out composition fields
+                                                document.querySelector('#compose-recipients').value = sentE.sender;
+                                                if (sentE.subject.slice(0, 3) === 'Re:') {
+                                                    document.querySelector('#compose-subject').value = sentE.subject;
+                                                } else {
+                                                    document.querySelector('#compose-subject').value = `Re:${sentE.subject}`;
+                                                }
+                                                document.querySelector('#compose-body').value = `On ${sentE.timestamp} ${sentE.sender} wrote:\n${sentE.body}`;
+
+
+                                            });
+                                    }
+
+
+                                }
+
                                 emailb.append(justanhr)
                                 emailb.append(emailbody)
 
@@ -234,12 +267,21 @@ function load_mailbox(mailbox) {
 
 
 
+}
 
+function reply_email() {
 
+    console.log(emaildetails.body)
+    // Show compose view and hide other views
+    document.querySelector('#emails-view').style.display = 'none';
+    document.querySelector('#compose-view').style.display = 'block';
+    document.querySelector('#emailb').style.display = 'none'
 
+    // Clear out composition fields
+    document.querySelector('#compose-recipients').value = '';
+    document.querySelector('#compose-subject').value = '';
+    document.querySelector('#compose-body').value = '';
 
 
 
 }
-
-
